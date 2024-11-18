@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Fire Alarm System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .about-section {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .about-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Fire Alarm System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'device_dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <h2>About Fire Alarm System</h2>
+        <p>The Fire Alarm System is an IoT-based solution designed to detect fire, smoke, and environmental changes in real time. The system employs a combination of temperature, humidity, and smoke sensors to monitor conditions in a designated area. In the event of smoke or fire detection, the system triggers an alarm to notify users instantly. Our goal is to provide a reliable, real-time alerting system that can be integrated into residential, commercial, and industrial spaces to enhance safety and prevent fire-related accidents.</p>
+
+        <h3>Technology Used</h3>
+        <p>This project utilizes a combination of hardware and software components, including:</p>
+        <ul>
+            <li><strong>Hardware:</strong> ESP32 microcontroller, MQ-2 smoke and gas sensor, DHT11 temperature and humidity sensor.</li>
+            <li><strong>Software:</strong> The backend is built with Django, and the frontend is developed using HTML, CSS, and JavaScript. Data is stored in Firebase Realtime Database for easy access and updates.</li>
+            <li><strong>Communication:</strong> The ESP32 communicates with Firebase to send sensor data and receives control commands from the web interface.</li>
+        </ul>
+
+        <h3>How It Works</h3>
+        <p>The Fire Alarm System continuously monitors the temperature, humidity, and smoke levels in a monitored environment. If any of the parameters exceed predefined thresholds, an alarm is triggered. The system provides real-time updates via a web dashboard, showing sensor readings and alarm status. Users can manually override the alarm or turn it off as needed. The system can be accessed remotely, offering flexibility and convenience.</p>
+
+        <h3>Key Features</h3>
+        <ul>
+            <li>Real-time monitoring of temperature, humidity, and smoke levels.</li>
+            <li>Automatic fire detection and alert system.</li>
+            <li>Manual override and alarm control.</li>
+            <li>Data logging and storage in Firebase for historical analysis.</li>
+            <li>Responsive web interface for ease of use.</li>
+        </ul>
+
+        <p>Our vision is to create a safer environment by offering an affordable and easy-to-implement fire detection solution.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Fire Alarm System. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

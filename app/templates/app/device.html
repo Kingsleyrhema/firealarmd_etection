@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Alarm System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            transition: background-color 0.5s ease;
+        }
+
+        .danger-blink {
+            animation: blink-bg 1s infinite;
+        }
+
+        @keyframes blink-bg {
+            0% {
+                background-color: #f8f9fa;
+            }
+            50% {
+                background-color: red;
+            }
+            100% {
+                background-color: #f8f9fa;
+            }
+        }
+
+        .device-status {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-box {
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .icon-box i {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        #alarm-message {
+            color: red;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Fire Alarm System</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'device_dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-primary text-white text-center py-4">
+        <h1>Fire Alarm System</h1>
+    </header>
+
+    <section id="device" class="my-5">
+        <div class="device-status text-center">
+            <h3 class="mb-4">Device Dashboard</h3>
+
+            <!-- Sensor Data -->
+            <div class="row text-center">
+                <div class="col-md-4 icon-box">
+                    <i class="fas fa-thermometer-half"></i>
+                    <p>Room Temp: <strong id="temperature">Loading...</strong></p>
+                </div>
+                <div class="col-md-4 icon-box">
+                    <i class="fas fa-tint"></i>
+                    <p>Humidity: <strong id="humidity">Loading...</strong></p>
+                </div>
+                <div class="col-md-4 icon-box">
+                    <i class="fas fa-cloud"></i>
+                    <p>Smoke/Gas: <strong id="smokeGas">Loading...</strong></p>
+                </div>
+            </div>
+
+            <!-- Alarm Section -->
+            <div class="mt-4">
+                <p id="alarm-message" style="display: none;">Fire/Smoke detected</p>
+                <button id="on-alarm" class="btn btn-danger">On Alarm</button>
+                <button id="off-alarm" class="btn btn-secondary">Off Alarm</button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <p>&copy; 2024 Fire Alarm System. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let manualOverride = false;
+
+        // Function to fetch sensor data asynchronously
+        async function fetchSensorData() {
+            try {
+                const response = await fetch('/get-sensor-data/');
+                const data = await response.json();
+
+                document.querySelector('#temperature').textContent = `${data.temperature}°C` || 'N/A';
+                document.querySelector('#humidity').textContent = `${data.humidity}%` || 'N/A';
+                document.querySelector('#smokeGas').textContent = `${data.mq2Analog} ppm` || 'N/A';
+
+                const alarmMessage = document.querySelector('#alarm-message');
+
+                // Handle alarm based on mq2Digital
+                if (!manualOverride) {
+                    if (data.mq2Digital === 0) {
+                        alarmMessage.style.display = 'block';
+                        document.body.classList.add('danger-blink');
+                    } else if (data.mq2Digital === 1) {
+                        alarmMessage.style.display = 'none';
+                        document.body.classList.remove('danger-blink');
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching sensor data: ", error);
+            }
+        }
+
+        // Function to update alarm status
+        async function updateAlarmStatus(status) {
+            try {
+                const response = await fetch(`/update-alarm-status/?status=${status}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const alarmMessage = document.querySelector('#alarm-message');
+                    if (status === "0") {
+                        alarmMessage.style.display = 'block';
+                        document.body.classList.add('danger-blink');
+                    } else {
+                        alarmMessage.style.display = 'none';
+                        document.body.classList.remove('danger-blink');
+                    }
+                }
+            } catch (error) {
+                console.error("Error updating alarm status: ", error);
+            }
+        }
+
+        // Turn on alarm
+        document.querySelector('#on-alarm').addEventListener('click', () => {
+            manualOverride = true;
+            updateAlarmStatus("0");
+        });
+
+        // Turn off alarm
+        document.querySelector('#off-alarm').addEventListener('click', () => {
+            manualOverride = true;
+            updateAlarmStatus("1");
+        });
+
+        // Fetch sensor data every 1 second
+        setInterval(fetchSensorData, 500);  // Data fetch interval is now 1 second
+    </script>
+
+</body>
+</html>
