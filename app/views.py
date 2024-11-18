@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.core.cache import cache
 import json
 import os
-from firebase_admin import credentials
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current file
 cred = credentials.Certificate(os.path.join(BASE_DIR, "csc242project-f0daf-firebase-adminsdk-5fhxf-f43af4bd80.json"))
@@ -33,7 +32,7 @@ def get_sensor_data(request):
         sensor_data = ref.get()
 
         # Fetch alarm status
-        alarm_ref = db.reference('alarmStatus')
+        alarm_ref = db.reference('sensorData/alarmStatus')
         alarm_status = alarm_ref.get()
 
         # If no data, return default
@@ -52,10 +51,22 @@ def get_sensor_data(request):
 
 def update_alarm_status(request):
     status = request.GET.get('status')  # "0" for On, "1" for Off
-    if status in ["0", "1"]:
+    if status == "0":
+        # Set alarm status to 0 (activated via manual button press)
         sensor_data_ref = db.reference('sensorData')
-        sensor_data_ref.update({'alarmStatus': int(status)})
-        return JsonResponse({'success': True, 'alarmStatus': int(status)})
+        sensor_data_ref.update({'alarmStatus': "0"})
+        return JsonResponse({'success': True, 'alarmStatus': "0"})
+
+    elif status == "1":
+        # Set alarm status to 1 (manual turn-off)
+        sensor_data_ref = db.reference('sensorData')
+        sensor_data_ref.update({'alarmStatus': "1"})
+        return JsonResponse({'success': True, 'alarmStatus': "1"})
+
+    elif status == "NA":
+        # Set alarm status to 'NA' (MQ2-controlled)
+        sensor_data_ref = db.reference('sensorData')
+        sensor_data_ref.update({'alarmStatus': "NA"})
+        return JsonResponse({'success': True, 'alarmStatus': "NA"})
 
     return JsonResponse({'success': False, 'message': 'Invalid status'})
-

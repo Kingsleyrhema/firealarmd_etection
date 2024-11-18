@@ -143,10 +143,10 @@
 
                 // Handle alarm based on mq2Digital
                 if (!manualOverride) {
-                    if (data.mq2Digital === 0) {
+                    if (data.mq2Digital === 0) {  // Alarm triggered
                         alarmMessage.style.display = 'block';
                         document.body.classList.add('danger-blink');
-                    } else if (data.mq2Digital === 1) {
+                    } else if (data.mq2Digital === 1) {  // Alarm cleared
                         alarmMessage.style.display = 'none';
                         document.body.classList.remove('danger-blink');
                     }
@@ -164,10 +164,10 @@
 
                 if (data.success) {
                     const alarmMessage = document.querySelector('#alarm-message');
-                    if (status === "0") {
+                    if (status === "0") {  // Alarm On
                         alarmMessage.style.display = 'block';
                         document.body.classList.add('danger-blink');
-                    } else {
+                    } else {  // Alarm Off
                         alarmMessage.style.display = 'none';
                         document.body.classList.remove('danger-blink');
                     }
@@ -190,7 +190,7 @@
         });
 
         // Fetch sensor data every 1 second
-        setInterval(fetchSensorData, 500);  // Data fetch interval is now 1 second
+        setInterval(fetchSensorData, 1000);  // Data fetch interval is now 1 second
     </script>
 
 </body>
