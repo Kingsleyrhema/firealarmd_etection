@@ -7,7 +7,7 @@ import json
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current file
-cred = credentials.Certificate(os.path.join(BASE_DIR, "csc242project-f0daf-firebase-adminsdk-5fhxf-f43af4bd80.json"))
+cred = credentials.Certificate(os.path.join(BASE_DIR, "csc242project-f0daf-firebase-adminsdk-5fhxf-4f92927917.json"))
 
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://csc242project-f0daf-default-rtdb.firebaseio.com/'  # Replace with your database URL
